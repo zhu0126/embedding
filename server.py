@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 import threading
 
 app = Flask(__name__)
-model = SentenceTransformer('Desktop/project/data/my_bge_model') 
+model = SentenceTransformer('ZHU1107/my-bge-model') 
 
 @app.route("/embedding", methods=["POST"])
 def get_embedding():
