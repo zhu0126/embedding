@@ -6,8 +6,8 @@ import threading
 hf_token = os.getenv("HF_TOKEN")
 
 app = Flask(__name__)
-model = SentenceTransformer('ZHU1107/my-embedding-model',use_auth_token=hf_token)
-# model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+# model = SentenceTransformer('ZHU1107/my-embedding-model',use_auth_token=hf_token)
+model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
 @app.route("/health", methods=["GET"])
 def health():
