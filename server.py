@@ -5,7 +5,7 @@ import threading
 
 app = Flask(__name__)
 # model = SentenceTransformer('ZHU1107/my-embedding-model')
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
 @app.route("/embedding", methods=["POST"])
 def get_embedding():
