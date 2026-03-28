@@ -4,7 +4,8 @@ from sentence_transformers import SentenceTransformer
 import threading
 
 app = Flask(__name__)
-model = SentenceTransformer('ZHU1107/my-embedding-model') 
+# model = SentenceTransformer('ZHU1107/my-embedding-model')
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 @app.route("/embedding", methods=["POST"])
 def get_embedding():
