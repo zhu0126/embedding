@@ -5,10 +5,19 @@ import threading
 import os
 
 hf_token = os.getenv("HF_TOKEN")
-
 app = Flask(__name__)
-# model = SentenceTransformer('ZHU1107/my-embedding-model',use_auth_token=hf_token)
-model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+
+model = None
+model_lock = threading.Lock()  # 避免多線程同時載入模型
+
+def get_model():
+    global model
+    with model_lock:
+        if model is None:
+            # 第一次呼叫才載入模型
+            model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu", use_auth_token=hf_token)
+            # model = SentenceTransformer('ZHU1107/my-embedding-model',use_auth_token=hf_token)
+        return model
 
 @app.route("/health", methods=["GET"])
 def health():
@@ -24,12 +33,16 @@ def get_embedding():
         if text is None:
             return jsonify({"error": "No text provided"}), 400
 
+        model_instance = get_model()
+        
         # 如果傳入 list 就一次返回多個向量
         if isinstance(text, list):
-            vectors = model.encode(text).tolist()
+            if len(text) > max_batch:
+                text = text[:max_batch]  # 截斷到最大 batch
+            vectors = model_instance.encode(text).tolist()
             return jsonify({"embedding": vectors})
         elif isinstance(text, str):
-            vector = model.encode(text).tolist()
+            vector = model_instance.encode(text).tolist()
             return jsonify({"embedding": vector})
         else:
             return jsonify({"error": "Invalid type for text"}), 400
