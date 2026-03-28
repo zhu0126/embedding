@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer
 import threading
+import os
 
 hf_token = os.getenv("HF_TOKEN")
 
