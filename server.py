@@ -3,9 +3,11 @@ from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer
 import threading
 
+hf_token = os.getenv("HF_TOKEN")
+
 app = Flask(__name__)
-# model = SentenceTransformer('ZHU1107/my-embedding-model')
-model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+model = SentenceTransformer('ZHU1107/my-embedding-model',use_auth_token=hf_token)
+# model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
 
 @app.route("/embedding", methods=["POST"])
 def get_embedding():
