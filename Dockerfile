@@ -14,6 +14,15 @@ RUN pip install --no-cache-dir --upgrade pip \
 # 複製專案
 COPY . .
 
+# 預先載入模型（減少第一次請求時的延遲和記憶體峰值）
+RUN python -c "
+from sentence_transformers import SentenceTransformer
+import os
+hf_token = os.getenv('HF_TOKEN')
+model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu', use_auth_token=hf_token)
+print('Model preloaded successfully')
+"
+
 # 設定環境變數，讓 Flask 不在開發模式
 ENV FLASK_ENV=production
 
