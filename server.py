@@ -16,7 +16,7 @@ def get_model():
         if model is None:
             # 第一次呼叫才載入模型
             # model = SentenceTransformer("all-MiniLM-L6-v2", device="cpu", use_auth_token=hf_token)
-            model = SentenceTransformer('ZHU1107/my-embedding-model'", device="cpu", use_auth_token=hf_token)
+            model = SentenceTransformer('ZHU1107/my-embedding-model', device="cpu", use_auth_token=hf_token)
         return model
 
 @app.route("/health", methods=["GET"])
