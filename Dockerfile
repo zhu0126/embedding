@@ -18,7 +18,6 @@ COPY . .
 ENV FLASK_ENV=production
 
 # 暴露端口
-EXPOSE 8000
+EXPOSE 10000
 
-# 啟動 Flask
-CMD ["python", "server.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "server:app", "--workers=1", "--threads=4", "--timeout=180"]
