@@ -3,3 +3,4 @@ torch
 transformers
 gunicorn
 optimum[onnxruntime]
+numpy
