@@ -1,5 +1,5 @@
 flask
-sentence-transformers
 torch
 transformers
 gunicorn
+optimum[onnxruntime]
