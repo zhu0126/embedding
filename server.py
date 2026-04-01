@@ -46,9 +46,13 @@ def get_embedding():
         data = request.get_json(force=True)
         texts = data.get("text")
 
+        if not request.is_json:
+            return jsonify({"error": "Content-Type must be application/json"}), 400
+    
+        texts = data.get("text")
         if texts is None:
-            return jsonify({"error": "No text provided"}), 400
-
+            return jsonify({"error": "Missing 'text' field. Example: {\"text\": \"你的文字\"}"}), 400
+        
         # 統一轉成 list 方便處理
         if isinstance(texts, str):
             texts = [texts]
