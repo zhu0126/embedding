@@ -22,7 +22,12 @@ def get_model():
             print("正在載入 ONNX 模型...")
             model = ORTModelForFeatureExtraction.from_pretrained(
                 ONNX_MODEL_DIR,
-                provider="CPUExecutionProvider"
+                provider="CPUExecutionProvider",
+                session_options={
+                    "intra_op_num_threads": 1,
+                    "inter_op_num_threads": 1,
+                    "graph_optimization_level": "ORT_ENABLE_ALL"
+                }
             )
             tokenizer = AutoTokenizer.from_pretrained(ONNX_MODEL_DIR)
             print("ONNX 模型載入完成")
