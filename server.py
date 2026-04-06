@@ -45,6 +45,26 @@ def mean_pooling(model_output, attention_mask):
     sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
     return sum_embeddings / sum_mask
 
+@lru_cache(maxsize=1000)
+def embed_single(text):
+    model_instance, tok = get_model()
+
+    encoded = tok(
+        [text],
+        padding=True,
+        truncation=True,
+        max_length=MAX_LENGTH,
+        return_tensors="pt"
+    )
+
+    with torch.no_grad():
+        outputs = model_instance(**encoded)
+
+    embeddings = mean_pooling(outputs, encoded["attention_mask"])
+    embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
+
+    return embeddings[0].tolist()
+
 @app.route("/health", methods=["GET"])
 def health():
     return "ok", 200
@@ -64,39 +84,25 @@ def get_embedding():
         # 統一轉成 list 方便處理
         if isinstance(texts, str):
             texts = [texts]
+            single_input = True
         elif isinstance(texts, list):
+            single_input = False
             if len(texts) > max_batch:
                 texts = texts[:max_batch]
         else:
             return jsonify({"error": "text must be str or list of str"}), 400
 
-        # 取得模型
-        model_instance, tok = get_model()
+        texts = [f"query: {t}" for t in texts]
 
-        # Tokenize
-        encoded = tok(
-            texts,
-            padding=True,
-            truncation=True,
-            max_length=512,
-            return_tensors="pt"
-        )
+        results = []
 
-        # 執行 inference
-        with torch.no_grad():
-            outputs = model_instance(**encoded)
+        for t in texts:
+            results.append(embed_single(t))
 
-        # Mean Pooling + L2 Normalize（跟原本 SentenceTransformer 行為一致）
-        embeddings = mean_pooling(outputs, encoded["attention_mask"])
-        embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
-
-        result = embeddings.tolist()
-
-        # 如果輸入是單一字串，就回傳單一向量（保持跟原本 API 相容）
-        if len(result) == 1 and isinstance(data.get("text"), str):
-            return jsonify({"embedding": result[0]})
+        if single_input:
+            return jsonify({"embedding": results[0]})
         else:
-            return jsonify({"embedding": result})
+            return jsonify({"embedding": results})
 
     except Exception as e:
         import traceback
