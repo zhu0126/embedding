@@ -33,7 +33,7 @@ def get_model():
                     "graph_optimization_level": "ORT_ENABLE_ALL"
                 }
             )
-            tokenizer = AutoTokenizer.from_pretrained(ONNX_MODEL_DIR)
+            tokenizer = AutoTokenizer.from_pretrained(ONNX_MODEL_DIR,use_fast=True)
             print("ONNX 模型載入完成")
         return model, tokenizer
 
