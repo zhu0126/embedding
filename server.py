@@ -4,6 +4,7 @@ from transformers import AutoTokenizer
 import threading
 import os
 import torch
+from functools import lru_cache
 
 app = Flask(__name__)
 
@@ -14,6 +15,9 @@ model_lock = threading.Lock()
 ONNX_MODEL_DIR = "ZHU1107/my-embedding-onnx"
 
 max_batch = 16   # Render 免費方案建議不要超過 16~24，避免一次吃太多記憶體
+MAX_LENGTH = 256
+
+torch.set_num_threads(1)
 
 def get_model():
     global model, tokenizer
