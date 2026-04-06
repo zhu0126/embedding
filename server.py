@@ -48,13 +48,12 @@ def health():
 @app.route("/embedding", methods=["POST"])
 def get_embedding():
     try:
-        data = request.get_json(force=True)
-        texts = data.get("text")
-
         if not request.is_json:
             return jsonify({"error": "Content-Type must be application/json"}), 400
     
+        data = request.get_json(force=True)
         texts = data.get("text")
+        
         if texts is None:
             return jsonify({"error": "Missing 'text' field. Example: {\"text\": \"你的文字\"}"}), 400
         
