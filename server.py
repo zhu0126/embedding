@@ -45,6 +45,9 @@ def mean_pooling(model_output, attention_mask):
     sum_mask = torch.clamp(input_mask_expanded.sum(1), min=1e-9)
     return sum_embeddings / sum_mask
 
+def normalize_text(t):
+    return t.strip().lower()
+
 @lru_cache(maxsize=1000)
 def embed_single(text):
     model_instance, tok = get_model()
@@ -75,7 +78,7 @@ def get_embedding():
         if not request.is_json:
             return jsonify({"error": "Content-Type must be application/json"}), 400
     
-        data = request.get_json(force=True)
+        data = request.get_json()
         texts = data.get("text")
         
         if texts is None:
@@ -92,8 +95,8 @@ def get_embedding():
         else:
             return jsonify({"error": "text must be str or list of str"}), 400
 
-        texts = [f"query: {t}" for t in texts]
-
+        texts = [f"query: {normaliza_text(t)}" for t in texts]
+        
         results = []
 
         for t in texts:
