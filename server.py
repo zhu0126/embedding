@@ -32,7 +32,6 @@ def get_model():
             
             model = ORTModelForFeatureExtraction.from_pretrained(
                 ONNX_MODEL_DIR,
-                provider=["CPUExecutionProvider"],
                 session_options=sess_options
             )
             tokenizer = AutoTokenizer.from_pretrained(ONNX_MODEL_DIR,use_fast=True)
