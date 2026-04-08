@@ -5,6 +5,7 @@ import threading
 import os
 import torch
 from functools import lru_cache
+import onnxruntime as ort
 
 app = Flask(__name__)
 
@@ -24,14 +25,15 @@ def get_model():
     with model_lock:
         if model is None:
             print("正在載入 ONNX 模型...")
+            sess_options = ort.SessionOptions()
+            sess_options.intra_op_num_threads = 1
+            sess_options.inter_op_num_threads = 1
+            sess_options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+            
             model = ORTModelForFeatureExtraction.from_pretrained(
                 ONNX_MODEL_DIR,
-                provider="CPUExecutionProvider",
-                session_options={
-                    "intra_op_num_threads": 1,
-                    "inter_op_num_threads": 1,
-                    "graph_optimization_level": "ORT_ENABLE_ALL"
-                }
+                provider=["CPUExecutionProvider"],
+                session_options=sess_options
             )
             tokenizer = AutoTokenizer.from_pretrained(ONNX_MODEL_DIR,use_fast=True)
             print("ONNX 模型載入完成")
