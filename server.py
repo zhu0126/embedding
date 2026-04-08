@@ -13,9 +13,9 @@ model = None
 tokenizer = None
 model_lock = threading.Lock()
 
-ONNX_MODEL_DIR = "ZHU1107/my-embedding-onnx"
+ONNX_MODEL_DIR = "BAAI/bge-small-zh-v1.5"
 
-max_batch = 16   # Render 免費方案建議不要超過 16~24，避免一次吃太多記憶體
+max_batch = 16  
 MAX_LENGTH = 256
 
 torch.set_num_threads(1)
@@ -67,7 +67,11 @@ def embed_single(text):
     embeddings = mean_pooling(outputs, encoded["attention_mask"])
     embeddings = torch.nn.functional.normalize(embeddings, p=2, dim=1)
 
-    return embeddings[0].tolist()
+    emb = embeddings[0].tolist()
+    if len(emb) < 512:
+    emb = emb + [0.0] * (512 - len(emb))
+
+    return emb
 
 @app.route("/health", methods=["GET"])
 def health():
