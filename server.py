@@ -95,7 +95,7 @@ def get_embedding():
         else:
             return jsonify({"error": "text must be str or list of str"}), 400
 
-        texts = [f"query: {normaliza_text(t)}" for t in texts]
+        texts = [f"query: {normalize_text(t)}" for t in texts]
         
         results = []
 
