@@ -42,3 +42,9 @@ pip install -r requirements.txt
 ```python
 python server.py
 ```
+
+### 3.Docker 執行方式
+```bash
+docker build -t embedding-server .
+docker run -p 8000:8000 embedding-server
+```
