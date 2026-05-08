@@ -13,7 +13,7 @@
 
 ## 使用技術
 - Python
-- FastAPI / Flask（看你實際用哪個）
+- Flask
 - Sentence Transformers
 - Docker
 
@@ -32,6 +32,8 @@
 ## 安裝方式
 
 ### 1. 安裝套件
-
+```bash
+pip install -r requirements.txt
+```
 ```bash
 pip install -r requirements.txt
