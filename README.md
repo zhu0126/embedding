@@ -38,3 +38,7 @@
 pip install -r requirements.txt
 ```
 
+### 2.啟動server
+```python
+python server.py
+```
