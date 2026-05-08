@@ -36,7 +36,6 @@
 ### 1. 安裝套件
 ```bash
 pip install -r requirements.txt
+```
 
-
-```bash
-pip install -r requirements.txt
+123
