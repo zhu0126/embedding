@@ -12,10 +12,12 @@
 ---
 
 ## 使用技術
-- Python
-- Flask
-- Sentence Transformers
-- Docker
+- flask
+- torch
+- transformers
+- gunicorn
+- optimum[onnxruntime]
+- numpy
 
 ---
 
